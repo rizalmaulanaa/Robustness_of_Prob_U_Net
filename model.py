@@ -1,6 +1,7 @@
 # https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/xnet/model.py
 
-from builder import build_xnet, build_unet
+from builders.UNet import build_unet
+from builders.XNet import build_xnet 
 from utils import freeze_model
 from backbones import get_backbone
 
