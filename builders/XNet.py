@@ -8,9 +8,9 @@ from blocks import Transpose2D_block, Upsample2D_block
 from blocks import down_block, attention_block, DeepSupervision
 
 def build_xnet(use_backbone, backbone, classes, skip_connection_layers,
-               decoder_filters=(256,128,64,32,16),
-               upsample_rates=(2,2,2,2,2),
-               n_upsample_blocks=5,
+               decoder_filters=(256,128,64,32),
+               upsample_rates=(2,2,2,2),
+               n_upsample_blocks=4,
                block_type='upsampling',
                activation='sigmoid',
                input_shape=(None,None,3),
@@ -20,6 +20,7 @@ def build_xnet(use_backbone, backbone, classes, skip_connection_layers,
 
     downterm = [None] * (n_upsample_blocks+1)
     interm = [None] * (n_upsample_blocks+1) * (n_upsample_blocks+1)
+    dsterm  = [None] * (n_upsample_blocks)
 
     if block_type == 'transpose':
         up_block = Transpose2D_block
@@ -62,19 +63,19 @@ def build_xnet(use_backbone, backbone, classes, skip_connection_layers,
         input = Input(shape=input_shape)
 
         for i in range(n_upsample_blocks+1):
-            if i==0:
+            if i == 0:
                 x = down_block(encoder_filters[n_upsample_blocks-i],
                                i, 0, use_batchnorm=use_batchnorm) (input)
             else:
                 down_rate = to_tuple(upsample_rates[n_upsample_blocks-i-1])
-                x = MaxPool2D(pool_size=down_rate) (x)
+                
+                x = MaxPool2D(pool_size=down_rate, name='encoder_stage{}-0_maxpool'.format(i)) (x)
                 x = down_block(encoder_filters[n_upsample_blocks-i],
                                i, 0, use_batchnorm=use_batchnorm) (x)
+
             downterm[i] = x
 
-        skip_layers_list = [downterm[n_upsample_blocks-i-1]
-                            for i in range(len(downterm[:-1]))]
-
+        skip_layers_list = [downterm[n_upsample_blocks-i-1] for i in range(len(downterm[:-1]))]
         skip_connection_layers = tuple([i.name for i in skip_layers_list])
         output = downterm[-1]
 
@@ -94,33 +95,37 @@ def build_xnet(use_backbone, backbone, classes, skip_connection_layers,
                     if attention:
                         interm[(n_upsample_blocks+1)*i+j] = attention_block(decoder_filters[n_upsample_blocks-i-1],
                                                                             interm[(n_upsample_blocks+1)*i+j],
-                                                                            i, j) ((downterm[i+1]))
+                                                                            i, j, upsample_rate=upsample_rate) (downterm[i+1])
 
                     interm[(n_upsample_blocks+1)*i+j+1] = up_block(decoder_filters[n_upsample_blocks-i-1],
                                                                    i, j+1, upsample_rate=upsample_rate,
                                                                    skip=interm[(n_upsample_blocks+1)*i+j],
-                                                                   use_batchnorm=use_batchnorm)(downterm[i+1])
+                                                                   use_batchnorm=use_batchnorm) (downterm[i+1])
                 else:
                     interm[(n_upsample_blocks+1)*i+j+1] = None
 
             else:
+                if i == 0 and deep_supervision:
+                    dsterm[j-1] = interm[(n_upsample_blocks+1)*i+j]
+
                 if attention:
                     interm[(n_upsample_blocks+1)*i+j] = attention_block(decoder_filters[n_upsample_blocks-i-1],
-                                                                        interm[(n_upsample_blocks+1)*i+j],
-                                                                        i, j) (interm[(n_upsample_blocks+1)*(i+1)+j])
+                                                                        interm[(n_upsample_blocks+1)*i+j], i, j,
+                                                                        upsample_rate=upsample_rate) (interm[(n_upsample_blocks+1)*(i+1)+j])
 
                 interm[(n_upsample_blocks+1)*i+j+1] = up_block(decoder_filters[n_upsample_blocks-i-1],
                                                                i, j+1, upsample_rate=upsample_rate,
                                                                skip=interm[(n_upsample_blocks+1)*i : (n_upsample_blocks+1)*i+j+1],
-                                                               use_batchnorm=use_batchnorm)(interm[(n_upsample_blocks+1)*(i+1)+j])
+                                                               use_batchnorm=use_batchnorm) (interm[(n_upsample_blocks+1)*(i+1)+j])
 
     # Deep Supervision
-    if deep_supervision and (len(skip_connection_layers) == n_upsample_blocks):
+    if deep_supervision and n_upsample_blocks > 1:
         # Currently only VGG or not using backbone
-        x = DeepSupervision(classes) (interm[1:n_upsample_blocks+1])
+        dsterm[-1] = interm[n_upsample_blocks]
+        x = DeepSupervision(classes) (dsterm)
         x = Average(name='average_ds') (x)
     else:
-        x = Conv2D(classes, (3,3), padding='same', name='final_conv')(interm[n_upsample_blocks])
-        x = Activation(activation, name=activation)(x)
+        x = Conv2D(classes, (3,3), padding='same', name='final_conv') (interm[n_upsample_blocks])
+        x = Activation(activation, name=activation) (x)
 
     return Model(input, x)

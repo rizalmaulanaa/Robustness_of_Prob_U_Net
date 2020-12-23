@@ -1,7 +1,7 @@
 # https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/xnet/model.py
 
 from builders.UNet import build_unet
-from builders.XNet import build_xnet 
+from builders.XNet import build_xnet
 from utils import freeze_model
 from backbones import get_backbone
 
@@ -11,8 +11,8 @@ DEFAULT_SKIP_CONNECTIONS = {
     'resnet50':         ('conv4_block6_out', 'conv3_block4_out', 'conv2_block3_out', 'conv1_relu'),
     'resnet101':        ('conv4_block6_out', 'conv3_block4_out', 'conv2_block3_out', 'conv1_relu'),
     'resnet152':        ('conv4_block6_out', 'conv3_block4_out', 'conv2_block3_out', 'conv1_relu'),
-    'inceptionv3':          (228, 86, 16, 9),
-    'inceptionresnetv2':    (594, 260, 16, 9),
+    # 'inceptionv3':          (228, 86, 16, 9),
+    # 'inceptionresnetv2':    (594, 260, 16, 9),
     'densenet121':          (311, 139, 51, 4),
     'densenet169':          (367, 139, 51, 4),
     'densenet201':          (479, 139, 51, 4),
@@ -41,8 +41,7 @@ def Xnet(use_backbone,
         input_shape:  (tuple) dimensions of input data (H, W, C)
         input_tensor: keras tensor
         encoder_weights: one of `None` (random initialization),
-            'imagenet' (pre-training on ImageNet),
-            'dof' (pre-training on DoF)
+            'imagenet' (pre-training on ImageNet)
         freeze_encoder: (bool) Set encoder layers weights as non-trainable. Useful for fine-tuning
         skip_connections: if 'default' is used take default skip connections,
             else provide a list of layer numbers or names starting from top of model
@@ -53,8 +52,8 @@ def Xnet(use_backbone,
         upsample_rates: (tuple of int) upsampling rates decoder blocks
         classes: (int) a number of classes for output
         activation: (str) one of keras activations for last model layer
-        attention: (bool) if True then used attention block and if False then not used attention block
-        deep_supervision: (bool) if True then used deep supervision on segmentation branch and if False then not used deep supervision
+        attention: (bool) if True then used attention block, else then not used attention block
+        deep_supervision: (bool) if True then used deep supervision on segmentation branch, else then not used deep supervision
     Returns:
         keras.models.Model instance
     """
@@ -108,10 +107,10 @@ def Unet(use_backbone,
          freeze_encoder=False,
          skip_connections='default',
          decoder_block_type='upsampling',
-         decoder_filters=(256,128,64,32,16),
+         decoder_filters=(256,128,64,32),
          decoder_use_batchnorm=True,
-         n_upsample_blocks=5,
-         upsample_rates=(2,2,2,2,2),
+         n_upsample_blocks=4,
+         upsample_rates=(2,2,2,2),
          classes=1,
          activation='sigmoid',
          attention=False):
@@ -122,8 +121,7 @@ def Unet(use_backbone,
         input_shape:  (tuple) dimensions of input data (H, W, C)
         input_tensor: keras tensor
         encoder_weights: one of `None` (random initialization),
-            'imagenet' (pre-training on ImageNet),
-            'dof' (pre-training on DoF)
+            'imagenet' (pre-training on ImageNet)
         freeze_encoder: (bool) Set encoder layers weights as non-trainable. Useful for fine-tuning
         skip_connections: if 'default' is used take default skip connections,
             else provide a list of layer numbers or names starting from top of model
@@ -134,7 +132,7 @@ def Unet(use_backbone,
         upsample_rates: (tuple of int) upsampling rates decoder blocks
         classes: (int) a number of classes for output
         activation: (str) one of keras activations for last model layer
-        attention: (bool) if True then used attention block and if False then not used attention block
+        attention: (bool) if True then used attention block, else then not used attention block
     Returns:
         keras.models.Model instance
     """
@@ -149,11 +147,11 @@ def Unet(use_backbone,
         if skip_connections == 'default':
             skip_connections = DEFAULT_SKIP_CONNECTIONS[backbone_name]
 
-        model_name = '{}u-{}'.format(temp, backbone_name)
+        model_name = '{}U-{}'.format(temp, backbone_name)
     else:
         backbone = None
         skip_connections = None
-        model_name = '{}u-{}'.format(temp, 'enc')
+        model_name = '{}U-{}'.format(temp, 'enc')
 
     model = build_unet(use_backbone,
                        backbone,
