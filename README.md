@@ -2,7 +2,7 @@
 Image Segmentation on Biomedical Task using a modified U-Net architecture. Mainly this repository got inspiration and insight on repository [UNetPlusPlus](https://github.com/MrGiovanni/UNetPlusPlus). In this repository, you can use many kinds of modified U-Net architecture, such as U-Net, Attention U-Net, UNet++, and Attention UNet++. The implementation is using TensorFlow and Keras, please check the [requirements.txt](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/requirements.txt) for the version that I used.
 
 ## UNet
-Title: U-Net: Convolutional Networks for Biomedical Image Segmentation.
+Title: U-Net: Convolutional Networks for Biomedical Image Segmentation.<br>
 Authors: Olaf Ronneberger, Philipp Fischer, and Thomas Brox.
 [[paper](https://arxiv.org/abs/1505.04597)].
 The architecture of UNet:
