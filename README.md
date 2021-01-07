@@ -2,34 +2,34 @@
 Image Segmentation on Biomedical Task using a modified U-Net architecture. Mainly this repository got inspiration and insight on repository [UNetPlusPlus](https://github.com/MrGiovanni/UNetPlusPlus). In this repository, you can use many kinds of modified U-Net architecture, such as U-Net, Attention U-Net, UNet++, and Attention UNet++. The implementation is using TensorFlow and Keras, please check the [requirements.txt](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/requirements.txt) for the version that I used.
 
 ## UNet
-Title: U-Net: Convolutional Networks for Biomedical Image Segmentation
-Authors: Olaf Ronneberger, Philipp Fischer, and Thomas Brox
-[paper](https://arxiv.org/abs/1505.04597)
+Title: U-Net: Convolutional Networks for Biomedical Image Segmentation.
+Authors: Olaf Ronneberger, Philipp Fischer, and Thomas Brox.
+[[paper](https://arxiv.org/abs/1505.04597)].
 The architecture of UNet:
-![UNet]()
+![UNet](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/model%20img/Models-U-Net.png)
 
 ## Attention UNet
-Title: Attention U-Net: Learning Where to Look for the Pancreas
-Authors: Ozan Oktay, Jo Schlemper, Loic Le Folgoc, Matthew Lee, Mattias Heinrich, Kazunari Misawa, Kensaku Mori, Steven McDonagh, Nils Y Hammerla, Bernhard Kainz, Ben Glocker, Daniel Rueckert
-[paper](https://arxiv.org/abs/1804.03999)
+Title: Attention U-Net: Learning Where to Look for the Pancreas.
+Authors: Ozan Oktay, Jo Schlemper, Loic Le Folgoc, Matthew Lee, Mattias Heinrich, Kazunari Misawa, Kensaku Mori, Steven McDonagh, Nils Y Hammerla, Bernhard Kainz, Ben Glocker, Daniel Rueckert.
+[[paper](https://arxiv.org/abs/1804.03999)].
 Attention Gate:
-![Attention Gate]()
+![Attention Gate](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/model%20img/Models-Attention%20Gate.png).
 The architecture of Attention UNet:
-![Attention UNet]()
+![Attention UNet](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/model%20img/Models-Attention%20U-Net.png).
 
 ## UNet++
-Title: UNet++: Redesigning Skip Connections to Exploit Multiscale Features in Image Segmentation
-Authors: Zongwei Zhou, Md Mahfuzur Rahman Siddiquee, Nima Tajbakhsh, Jianming Liang
-[paper](https://arxiv.org/abs/1912.05074)
+Title: UNet++: Redesigning Skip Connections to Exploit Multiscale Features in Image Segmentation.
+Authors: Zongwei Zhou, Md Mahfuzur Rahman Siddiquee, Nima Tajbakhsh, Jianming Liang.
+[[paper](https://arxiv.org/abs/1912.05074)].
 The architecture of UNet++:
-![UNet++]()
+![UNet++](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/model%20img/Models-UNet%2B%2B.png).
 
 ## Attention UNet++
-Title: Attention Unet++: A Nested Attention-Aware U-Net for Liver CT Image Segmentation
-Authors: Chen Li, Yusong Tan, Wei Chen, Xin Luo, Yuanming Gao, Xiaogang Jia, Zhiying Wang
-[paper](https://ieeexplore.ieee.org/document/9190761)
+Title: Attention Unet++: A Nested Attention-Aware U-Net for Liver CT Image Segmentation.
+Authors: Chen Li, Yusong Tan, Wei Chen, Xin Luo, Yuanming Gao, Xiaogang Jia, Zhiying Wang.
+[[paper](https://ieeexplore.ieee.org/document/9190761)].
 The architecture of Attention UNet++:
-![Attention UNet++]()
+![Attention UNet++](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/model%20img/Models-Attention%20UNet%2B%2B%20with%20downsampling.png).
 
 ## Usage
 To use this repository, simply just call the (model name) function in model file.
