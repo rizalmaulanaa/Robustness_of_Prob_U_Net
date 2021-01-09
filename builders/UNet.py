@@ -25,7 +25,10 @@ def build_unet(use_backbone, backbone, classes, skip_connection_layers,
     # Using backbone for the encoder
     if use_backbone:
         input = backbone.input
-        x = backbone.output
+        if 'vgg' not in backbone.name:
+            x = backbone.output
+        else:
+            x = backbone.layers[-2].output
 
         skip_layers_list = ([get_layer_number(backbone, l) if isinstance(l, str) else l 
                              for l in skip_connection_layers])
@@ -62,16 +65,21 @@ def build_unet(use_backbone, backbone, classes, skip_connection_layers,
                 skip_connection = backbone.layers[skip_layers_list[i]].output
             else:
                 skip_connection = skip_layers_list[i]
+                
             if attention:
-                skip_connection = attention_block(decoder_filters[i], skip_connection,
-                                                  i, 0, upsample_rate=upsample_rate) (x)
+                skip_connection = attention_block(decoder_filters[i], skip_connection, n_upsample_blocks-i-1,
+                                                  i+1, upsample_rate=upsample_rate) (x)
 
-        x = up_block(decoder_filters[i], i, 0, upsample_rate=upsample_rate,
+        x = up_block(decoder_filters[i], n_upsample_blocks-i-1, i+1, upsample_rate=upsample_rate,
                      skip=skip_connection, use_batchnorm=use_batchnorm) (x)
+        
+        
+    if use_backbone and 'vgg' not in backbone.name:
+        x = up_block(decoder_filters[-1], 0, n_upsample_blocks+1, 
+                     upsample_rate=to_tuple(upsample_rates[-1]),
+                     skip=None, use_batchnorm=use_batchnorm) (x)
 
     x = Conv2D(classes, (3,3), padding='same', name='final_conv') (x)
     x = Activation(activation, name=activation) (x)
 
-    model = Model(input, x)
-
-    return model
+    return Model(input, x)
