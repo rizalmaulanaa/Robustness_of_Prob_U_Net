@@ -1,4 +1,4 @@
-# https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/xnet/model.py
+# https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models
 
 from builders.UNet import build_unet
 from builders.XNet import build_xnet
@@ -12,8 +12,6 @@ DEFAULT_SKIP_CONNECTIONS = {
     'resnet50':         ('conv4_block6_out', 'conv3_block4_out', 'conv2_block3_out', 'conv1_relu'),
     'resnet101':        ('conv4_block6_out', 'conv3_block4_out', 'conv2_block3_out', 'conv1_relu'),
     'resnet152':        ('conv4_block6_out', 'conv3_block4_out', 'conv2_block3_out', 'conv1_relu'),
-    # 'inceptionv3':          (228, 86, 16, 9),
-    # 'inceptionresnetv2':    (594, 260, 16, 9),
     'densenet121':          (311, 139, 51, 4),
     'densenet169':          (367, 139, 51, 4),
     'densenet201':          (479, 139, 51, 4),
@@ -27,7 +25,7 @@ def AttXnet(use_backbone,
             freeze_encoder=False,
             skip_connections='default',
             decoder_block_type='upsampling',
-            decoder_filters=(256,128,64,32),
+            decoder_filters=(256,128,64,32,16),
             decoder_use_batchnorm=True,
             n_upsample_blocks=4,
             upsample_rates=(2,2,2,2),
@@ -60,7 +58,7 @@ def AttXnet(use_backbone,
     """
 
     att_name = 'Att' if attention else ''
-    ds_name = 'ds' if deep_supervision else ''
+    ds_name = '_ds' if deep_supervision else ''
     if use_backbone:
         backbone = get_backbone(backbone_name,
                                 input_shape=input_shape,
@@ -69,13 +67,13 @@ def AttXnet(use_backbone,
                                 include_top=False)
 
         if skip_connections == 'default':
-            skip_connections = DEFAULT_SKIP_CONNECTIONS[backbone_name]
+            skip_connections = DEFAULT_SKIP_CONNECTIONS[backbone_name][-(n_upsample_blocks):]
 
-        model_name = '{}X-{}-{}'.format(att_name, backbone_name, ds_name)
+        model_name = '{}X{}{}'.format(att_name, '_'+backbone_name, ds_name)
     else:
         backbone = None
         skip_connections = None
-        model_name = '{}X-{}-{}'.format(att_name, 'enc', ds_name)
+        model_name = '{}X{}{}'.format(att_name, '_enc', ds_name)
 
     model = build_Attxnet(use_backbone,
                        backbone,
@@ -107,7 +105,7 @@ def Xnet(use_backbone,
          freeze_encoder=False,
          skip_connections='default',
          decoder_block_type='upsampling',
-         decoder_filters=(256,128,64,32),
+         decoder_filters=(256,128,64,32,16),
          decoder_use_batchnorm=True,
          n_upsample_blocks=4,
          upsample_rates=(2,2,2,2),
@@ -140,7 +138,7 @@ def Xnet(use_backbone,
     """
 
     att_name = 'Att' if attention else ''
-    ds_name = 'ds' if deep_supervision else ''
+    ds_name = '_ds' if deep_supervision else ''
     if use_backbone:
         backbone = get_backbone(backbone_name,
                                 input_shape=input_shape,
@@ -149,13 +147,13 @@ def Xnet(use_backbone,
                                 include_top=False)
 
         if skip_connections == 'default':
-            skip_connections = DEFAULT_SKIP_CONNECTIONS[backbone_name]
+            skip_connections = DEFAULT_SKIP_CONNECTIONS[backbone_name][-(n_upsample_blocks):]
 
-        model_name = '{}X-{}-{}'.format(att_name, backbone_name, ds_name)
+        model_name = '{}X{}{}'.format(att_name, '_'+backbone_name, ds_name)
     else:
         backbone = None
         skip_connections = None
-        model_name = '{}X-{}-{}'.format(att_name, 'enc', ds_name)
+        model_name = '{}X{}{}'.format(att_name, '_enc', ds_name)
 
     model = build_xnet(use_backbone,
                        backbone,
@@ -179,8 +177,6 @@ def Xnet(use_backbone,
 
     return model
 
-# https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/unet/model.py
-
 def Unet(use_backbone,
          backbone_name='vgg16',
          input_shape=(None, None, 3),
@@ -189,7 +185,7 @@ def Unet(use_backbone,
          freeze_encoder=False,
          skip_connections='default',
          decoder_block_type='upsampling',
-         decoder_filters=(256,128,64,32),
+         decoder_filters=(256,128,64,32,16),
          decoder_use_batchnorm=True,
          n_upsample_blocks=4,
          upsample_rates=(2,2,2,2),
@@ -226,14 +222,15 @@ def Unet(use_backbone,
                                 input_tensor=input_tensor,
                                 weights=encoder_weights,
                                 include_top=False)
-        if skip_connections == 'default':
-            skip_connections = DEFAULT_SKIP_CONNECTIONS[backbone_name]
 
-        model_name = '{}U-{}'.format(att_name, backbone_name)
+        if skip_connections == 'default':
+            skip_connections = DEFAULT_SKIP_CONNECTIONS[backbone_name][-(n_upsample_blocks):]
+
+        model_name = '{}U{}'.format(att_name, '_'+backbone_name)
     else:
         backbone = None
         skip_connections = None
-        model_name = '{}U-{}'.format(att_name, 'enc')
+        model_name = '{}U{}'.format(att_name, '_enc')
 
     model = build_unet(use_backbone,
                        backbone,
