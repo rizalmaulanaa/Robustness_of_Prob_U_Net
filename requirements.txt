@@ -1,5 +1,5 @@
-tensorflow==2.4.0
-keras==2.4.3
+tensorflow>=2.4
+keras>=2.4
 
 # Application wise
 nibabel
