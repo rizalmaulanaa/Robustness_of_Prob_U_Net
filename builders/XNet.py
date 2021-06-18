@@ -1,4 +1,4 @@
-# https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/xnet/builder.py
+# modified code from https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/xnet/builder.py
 
 from tensorflow.keras import Model, Input
 from tensorflow.keras.layers import Conv2D, Activation, MaxPool2D, Average
