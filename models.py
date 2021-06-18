@@ -1,4 +1,4 @@
-# https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models
+# modified code from https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models
 
 from builders.UNet import build_unet
 from builders.XNet import build_xnet

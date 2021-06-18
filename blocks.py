@@ -1,4 +1,4 @@
-# https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/xnet/blocks.py
+# modified code from https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models/xnet/blocks.py
 
 from tensorflow.keras.layers import Conv2DTranspose, UpSampling2D, Conv2D
 from tensorflow.keras.layers import Add, Multiply, BatchNormalization
@@ -123,7 +123,7 @@ def attention_block(filters, skip, stage, cols, upsample_rate=(2,2)):
     def layer(input_tensor):
         conv_name, bn_name, relu_name, up_name,_, add_name, sigmoid_name, mul_name = handle_block_names(stage, cols, type_='attention')
 
-        x_up = UpRelu(filters, conv_name=conv_name+'_before', bn_name=bn_name+'_before', 
+        x_up = UpRelu(filters, conv_name=conv_name+'_before', bn_name=bn_name+'_before',
                       relu_name=relu_name+'_before', up_name=up_name+'_before',
                       use_batchnorm=True, upsample_rate=upsample_rate) (input_tensor)
 
