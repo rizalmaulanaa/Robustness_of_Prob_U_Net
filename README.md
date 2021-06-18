@@ -35,8 +35,8 @@ The architecture of Attention UNet++:<br>
 To use this repository, simply just call the (model name) function in model file.
 ```python
 import model
-model = model.Unet(use_backbone=False, input_shape=(256,256,1))
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=[dice_coeff])
+model = model.Unet(use_backbone=False, input_shape=(256,256,1), attention=False)
+model.compile(optimizer='adam', loss='binary_crossentropy')
 model.fit(img_train, seg_train, epochs=100, batch_size=32)
 ```
 In this repository, you can choose to use backbone or only (conv+relu)x2. If you want to use backbone please fill the parameter use_backbone into True. The backbone that compatible with this implementation is VGG, ResNet, and DenseNet. And if you want to use Attention Gate on modified U-Net architecture, please fill the parameter attention into True.
