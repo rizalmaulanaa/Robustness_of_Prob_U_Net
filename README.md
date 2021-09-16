@@ -1,6 +1,8 @@
 # Robustness of Probabilistic U-Net
 White Matter Hyperintensities (WMHs) segmentation using a modified U-Net architecture. Mainly this repository got inspiration and insight on repositories [UNetPlusPlus](https://github.com/MrGiovanni/UNetPlusPlus) and [probabilistic_unet](https://github.com/SimonKohl/probabilistic_unet). In this repository, you can use many kinds of modified U-Net architecture, such as U-Net, Attention U-Net, U-Net++, Attention U-Net++, and Probabilistic U-Net. The implementation is using TensorFlow and Keras, please check the [requirements.txt](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/requirements.txt) for the version that I used.
 
+You can access the pre-trained models with these link: https://drive.google.com/drive/folders/1-G8h1XcnFNcFzAg2OdsxVa-3kF-sM6RA?usp=sharing
+
 ## U-Net
 Title: U-Net: Convolutional Networks for Biomedical Image Segmentation.<br>
 Authors: Olaf Ronneberger, Philipp Fischer, and Thomas Brox.<br>
@@ -29,7 +31,7 @@ Title: Attention Unet++: A Nested Attention-Aware U-Net for Liver CT Image Segm
 Authors: Chen Li, Yusong Tan, Wei Chen, Xin Luo, Yuanming Gao, Xiaogang Jia, Zhiying Wang.<br>
 [[paper](https://ieeexplore.ieee.org/document/9190761)]<br>
 The architecture of Attention U-Net++:<br>
-![Attention UNet++](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/model%20img/Models-Attention_U_Net%2B%2B%20with%20downsampling.png)<br>
+![Attention UNet++](https://github.com/rizalmaulanaa/Attention-XNet/blob/master/model%20img/Models-Attention_U_Net%2B%2B.png)<br>
 
 ## Probabilistic U-Net
 Title: A Probabilistic U-Net for Segmentation of Ambiguous Images.<br>
