@@ -1,10 +1,11 @@
 # modified code from https://github.com/MrGiovanni/UNetPlusPlus/blob/master/keras/segmentation_models
 
-from builders.UNet import build_unet
-from builders.XNet import build_xnet
-from builders.AttentionXNet import build_Attxnet
-from utils import freeze_model
-from backbones import get_backbone
+from .utils import freeze_model
+from .backbones import get_backbone
+from .builders.UNet import build_unet
+from .builders.XNet import build_xnet
+from .builders.AttentionXNet import build_Attxnet
+from .builders.Prob_U_Net import build_prob_u_net
 
 DEFAULT_SKIP_CONNECTIONS = {
     'vgg16':            ('block4_conv3', 'block3_conv3', 'block2_conv2', 'block1_conv2'),
@@ -16,6 +17,50 @@ DEFAULT_SKIP_CONNECTIONS = {
     'densenet169':          (367, 139, 51, 4),
     'densenet201':          (479, 139, 51, 4),
 }
+
+def Prob_Unet(num_classes,
+              activation,
+              latent_dim=6,
+              resolution_lvl=5,
+              img_shape=(None, None, 1),
+              seg_shape=(None, None, 1),
+              num_filters=(32, 64, 128, 256, 512),
+              downsample_signal=(2,2,2,2,2)):
+    """
+
+    Parameters
+    ----------
+    num_classes : int
+        Number of classes for segmentation.
+    activation : tf.activation
+        Activation function for the last convolution.
+    latent_dim : int, optional
+        Number of latent dimention for mu, sigma, and z sample. The default is 6.
+    resolution_lvl : int, optional
+        How much downsampling/upsampling will be done. The default is 5.
+    img_shape : tuple, optional
+        Shape of input images. The default is (None, None, 1).
+    seg_shape : tuple, optional
+        Shape of input segmentation/Ground Truth. The default is (None, None, 1).
+    num_filters : tuple
+        Number of filter in encoder and decoder blocks. The default is (32, 64, 128, 256, 512).
+    downsample_signal : tuple, optional
+        Size of downsampling/upsampling in every resolution level. The default is (2,2,2,2,2).
+
+    Returns
+    -------
+    model : keras.models.Model instance
+
+    """
+    model = build_prob_u_net(num_classes=num_classes,
+                             activation=activation,
+                             latent_dim=latent_dim,
+                             resolution_lvl=resolution_lvl,
+                             img_shape=img_shape,
+                             seg_shape=seg_shape,
+                             num_filters=num_filters,
+                             downsample_signal=downsample_signal)
+    return model
 
 def AttXnet(use_backbone,
             backbone_name='vgg16',
